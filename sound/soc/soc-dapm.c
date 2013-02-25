@@ -1826,12 +1826,12 @@ static int dapm_power_widgets(struct snd_soc_card *card, int event)
 	}
 	async_synchronize_full_domain(&async_domain);
 
-	list_for_each_entry(w, &down_list, power_list) {
-		dapm_seq_check_event(card, w, SND_SOC_DAPM_WILL_PMD);
+	list_for_each_entry(w, &down_list, list) {
+		dapm_seq_check_event(dapm, w, SND_SOC_DAPM_WILL_PMD);
 	}
 
-	list_for_each_entry(w, &up_list, power_list) {
-		dapm_seq_check_event(card, w, SND_SOC_DAPM_WILL_PMU);
+	list_for_each_entry(w, &up_list, list) {
+		dapm_seq_check_event(dapm, w, SND_SOC_DAPM_WILL_PMU);
 	}
 
 	/* Power down widgets first; try to avoid amplifying pops. */
