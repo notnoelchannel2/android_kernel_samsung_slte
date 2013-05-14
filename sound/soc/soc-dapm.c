@@ -649,8 +649,10 @@ static int dapm_create_or_share_mixmux_kcontrol(struct snd_soc_dapm_widget *w,
 			long_name = kasprintf(GFP_KERNEL, "%s %s",
 				 w->name + prefix_len,
 				 w->kcontrol_news[kci].name);
-			if (long_name == NULL)
+			if (long_name == NULL) {
+				kfree(wlist);
 				return -ENOMEM;
+			}
 
 			name = long_name;
 		} else if (wname_in_long_name) {
