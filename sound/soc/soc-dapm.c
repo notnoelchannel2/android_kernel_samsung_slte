@@ -671,17 +671,15 @@ static int dapm_create_or_share_mixmux_kcontrol(struct snd_soc_dapm_widget *w,
 		kcontrol = snd_soc_cnew(&w->kcontrol_news[kci], NULL, name,
 					prefix);
 		kcontrol->private_free = dapm_kcontrol_free;
+		kfree(long_name);
 		ret = snd_ctl_add(card, kcontrol);
 		if (ret < 0) {
 			dev_err(dapm->dev,
 				"ASoC: failed to add widget %s dapm kcontrol %s: %d\n",
 				w->name, name, ret);
+			kfree(wlist);
 			return ret;
 		}
-	} else {
-		ret = dapm_kcontrol_add_widget(kcontrol, w);
-		if (ret)
-			return ret;
 	}
 
 	w->kcontrols[kci] = kcontrol;
