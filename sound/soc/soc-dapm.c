@@ -581,11 +581,6 @@ static int dapm_is_shared_kcontrol(struct snd_soc_dapm_context *dapm,
 	return 0;
 }
 
-static void dapm_kcontrol_free(struct snd_kcontrol *kctl)
-{
-	kfree(kctl->private_data);
-}
-
 /*
  * Determine if a kcontrol is shared. If it is, look it up. If it isn't,
  * create it. Either way, add the widget into the control's widget list
@@ -654,10 +649,8 @@ static int dapm_create_or_share_mixmux_kcontrol(struct snd_soc_dapm_widget *w,
 			long_name = kasprintf(GFP_KERNEL, "%s %s",
 				 w->name + prefix_len,
 				 w->kcontrol_news[kci].name);
-			if (long_name == NULL) {
-				kfree(wlist);
+			if (long_name == NULL)
 				return -ENOMEM;
-			}
 
 			name = long_name;
 		} else if (wname_in_long_name) {
@@ -672,14 +665,24 @@ static int dapm_create_or_share_mixmux_kcontrol(struct snd_soc_dapm_widget *w,
 					prefix);
 		kcontrol->private_free = dapm_kcontrol_free;
 		kfree(long_name);
+
+		ret = dapm_kcontrol_data_alloc(w, kcontrol);
+		if (ret) {
+			snd_ctl_free_one(kcontrol);
+			return ret;
+		}
+
 		ret = snd_ctl_add(card, kcontrol);
 		if (ret < 0) {
 			dev_err(dapm->dev,
 				"ASoC: failed to add widget %s dapm kcontrol %s: %d\n",
 				w->name, name, ret);
-			kfree(wlist);
 			return ret;
 		}
+	} else {
+		ret = dapm_kcontrol_add_widget(kcontrol, w);
+		if (ret)
+			return ret;
 	}
 
 	w->kcontrols[kci] = kcontrol;
