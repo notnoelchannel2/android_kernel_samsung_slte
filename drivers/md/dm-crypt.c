@@ -1391,9 +1391,9 @@ static void crypt_dtr(struct dm_target *ti)
 
 	if (cc->io_queue)
 		destroy_workqueue(cc->io_queue);
-	if (cc->hw_fmp == 0)
-		if (cc->crypt_queue)
-			destroy_workqueue(cc->crypt_queue);
+
+	if (cc->crypt_queue)
+		destroy_workqueue(cc->crypt_queue);
 
 	crypt_free_tfms(cc);
 
