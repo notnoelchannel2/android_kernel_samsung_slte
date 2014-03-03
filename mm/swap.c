@@ -196,7 +196,7 @@ bool __get_page_tail(struct page *page)
 	 * split_huge_page().
 	 */
 	bool got = false;
-	struct page *page_head;
+	struct page *page_head = compound_head(page);
 
 	/*
 	 * If this is a hugetlbfs page it cannot be split under us.  Simply
