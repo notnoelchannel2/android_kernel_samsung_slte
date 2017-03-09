@@ -470,8 +470,7 @@ extern void packagelist_exit(void);
 #define BY_USERID	(1 << 1)
 struct limit_search {
 	unsigned int flags;
-	const char *name;
-	size_t length;
+	struct qstr name;
 	userid_t userid;
 };
 
@@ -607,4 +606,20 @@ static inline void sdcardfs_copy_and_fix_attrs(struct inode *dest, const struct 
 	dest->i_flags = src->i_flags;
 	set_nlink(dest, src->i_nlink);
 }
+static inline bool str_case_eq(const char *s1, const char *s2)
+{
+	return !strcasecmp(s1, s2);
+}
+
+static inline bool str_n_case_eq(const char *s1, const char *s2, size_t len) {
+	return !strncasecmp(s1, s2, len);
+}
+
+static inline bool qstr_case_eq(const struct qstr *q1, const struct qstr *q2)
+{
+	return q1->len == q2->len && str_case_eq(q1->name, q2->name);
+}
+
+#define QSTR_LITERAL(string) QSTR_INIT(string, sizeof(string)-1)
+
 #endif	/* not _SDCARDFS_H_ */
