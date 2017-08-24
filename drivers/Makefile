@@ -175,3 +175,5 @@ obj-$(CONFIG_SENSORS_CORE)	+= sensors/
 # SecFilter Driver
 obj-$(CONFIG_SEC_NET_FILTER)	+= secfilter/
 
+# Android non-staging drivers
+obj-$(CONFIG_ANDROID)	+= android/
