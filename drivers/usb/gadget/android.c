@@ -1510,8 +1510,6 @@ functions_store(struct device *pdev, struct device_attribute *attr,
 
 	while (b) {
 		name = strsep(&b, ",");
-		if (!name)
-			continue;
 
 		is_ffs = 0;
 		strlcpy(aliases, dev->ffs_aliases, sizeof(aliases));
