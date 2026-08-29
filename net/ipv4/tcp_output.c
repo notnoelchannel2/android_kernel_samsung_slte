@@ -1868,7 +1868,7 @@ static bool tcp_write_xmit(struct sock *sk, unsigned int mss_now, int nonagle,
 		 *  - faster recovery
 		 *  - high rates
 		 */
-		limit = max(skb->truesize, sk->sk_pacing_rate >> 10);
+		limit = max_t(unsigned int, skb->truesize, sysctl_tcp_limit_output_bytes);
 
 		if (atomic_read(&sk->sk_wmem_alloc) > limit) {
 			set_bit(TSQ_THROTTLED, &tp->tsq_flags);
