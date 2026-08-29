@@ -321,11 +321,14 @@ static int ecryptfs_open(struct inode *inode, struct file *file)
 	}
 	ecryptfs_set_file_lower(
 		file, ecryptfs_inode_to_private(inode)->lower_file);
-	if (S_ISDIR(ecryptfs_dentry->d_inode->i_mode)) {
+		if (S_ISDIR(ecryptfs_dentry->d_inode->i_mode)) {
 #ifdef CONFIG_SDP
 		/*
 		 * it's possible to have a sensitive directory. (vault)
 		 */
+		struct ecryptfs_mount_crypt_stat *mount_crypt_stat =
+			&ecryptfs_superblock_to_private(inode->i_sb)->mount_crypt_stat;
+
 		if (mount_crypt_stat->flags & ECRYPTFS_MOUNT_SDP_ENABLED)
 			crypt_stat->flags |= ECRYPTFS_DEK_SDP_ENABLED;
 #endif
