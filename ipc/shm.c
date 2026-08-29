@@ -170,7 +170,7 @@ static inline void shm_lock_by_ptr(struct shmid_kernel *ipcp)
 static inline struct shmid_kernel *shm_lock_check(struct ipc_namespace *ns,
 						int id)
 {
-	struct kern_ipc_perm *ipcp = ipc_lock_check(&shm_ids(ns), id);
+	struct kern_ipc_perm *ipcp = ipc_obtain_object_check(&shm_ids(ns), id);
 
 	if (IS_ERR(ipcp))
 		return (struct shmid_kernel *)ipcp;
